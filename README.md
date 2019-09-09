@@ -17,3 +17,32 @@ Note that the data is sorted in reverse chronological order from the
 server, meaning that the newest dates are first.  This means when
 paging through the dataset N elements at a time, we have to go
 backwards in time.
+
+# Building
+
+## Prerequisites
+
+You need to have Go version 1.12.6 or newer since this project uses
+modules.
+
+## Building for different operating systems
+
+Building `tkaq` is quite straight forward.  Below are instructions for
+building it for various platforms.  The binary will turn up in the
+`bin` directory of the project.
+
+### For OSX
+
+    make
+	
+### For Linux
+
+    GOARCH=amd64 GOOS=linux make	
+
+### For Windows
+
+	GOARCH=amd64 GOOS=windows make
+	
+
+
+
