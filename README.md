@@ -43,6 +43,44 @@ building it for various platforms.  The binary will turn up in the
 
 	GOARCH=amd64 GOOS=windows make
 	
+# Running
+
+In order to run this program you will need an API token from
+`https://nbiot.engineering/api-tokens-overview` in order to be allowed to access the air quality
+collection.  Once you have created this token you can either put this
+into a configuration file named `.telenor-nbiot` which looks like
+this:
+
+    address=https://api.nbiot.telenor.io
+    token=<your API token>
+
+or you can make the API address and token available via environment
+variables:
+
+    export TELENOR_NBIOT_ADDRESS="https://api.nbiot.telenor.io/"
+	export TELENOR_NBIOT_TOKEN="<your API token>"
+
+The build process produces one binary `bin/tkaq`.  If you invoke it
+with the `-h` flag it will display the command line options.
+
+    $ bin/tkaq -h
+    Usage:
+      tkaq [OPTIONS]
+
+    Application Options:
+      -c, --collection-id= Collection ID (default: 17dh0cf43jfi2f)
+      -p, --pagesize=      Number of datapoints to return per page (default: 500)
+      -s, --start-time=    Start date and time in RFC3339 format
+
+    Help Options:
+      -h, --help           Show this help message
+	  
+So in order to list every datapoint since midnight 2019-10-01 UTC you
+issue the command:
+
+    bin/tkaq -s 2019-10-01T00:00:00Z
+	  
+
 
 
 

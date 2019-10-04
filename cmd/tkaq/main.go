@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/borud/tkaq/pkg/decoder"
-	"github.com/jessevdk/go-flags"
+	flags "github.com/jessevdk/go-flags"
 	"github.com/telenordigital/nbiot-go"
 )
 
@@ -18,7 +18,7 @@ const (
 type progOpts struct {
 	CollectionID string `short:"c" long:"collection-id" description:"Collection ID" default:"17dh0cf43jfi2f"`
 	Pagesize     int    `short:"p" long:"pagesize" description:"Number of datapoints to return per page" default:"500"`
-	StartTime    string `short:"s" long:"start-time" description:"Start date and time"`
+	StartTime    string `short:"s" long:"start-time" description:"Start date and time in RFC3339 format"`
 }
 
 var opts progOpts
@@ -64,6 +64,8 @@ func main() {
 		log.Fatalf("Unable to connect client: %v", err)
 	}
 
+	count := 0
+
 	fmt.Printf("Timestamp,Name,ID,IMSI,IMEI,Status,Lat,Long,Altitude,RelHumidity,Temperature,CO2PPM,TVOCPPB,PM25,PM10\n")
 	for {
 
@@ -74,6 +76,7 @@ func main() {
 
 		// Reached end of dataset in response
 		if len(data) == 0 {
+			log.Printf("Output %d datapoints", count)
 			return
 		}
 
@@ -92,6 +95,7 @@ func main() {
 			// If the current entry is older than the starting point we are done
 			ts := msToTime(entry.Received)
 			if ts.Before(start) {
+				log.Printf("Output %d datapoints", count)
 				return
 			}
 
@@ -112,11 +116,11 @@ func main() {
 				p.PM25,
 				p.PM10,
 			)
+			count++
 
 		}
 
 		// Since we are going backwards in time we now update the until parameter
 		until = msToTime(data[len(data)-1].Received)
-		log.Printf("Page boundary for %d at %s", len(data), until)
 	}
 }
